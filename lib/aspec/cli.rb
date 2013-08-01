@@ -24,7 +24,7 @@ module Aspec
     end
 
     def aspec_helper_path
-      File.expand_path("spec/aspec/aspec_helper.rb")
+      File.expand_path("aspec/aspec_helper.rb")
     end
 
     def run
