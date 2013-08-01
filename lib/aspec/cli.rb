@@ -31,6 +31,12 @@ module Aspec
       bits = args[0].split(":")
 
       load aspec_helper_path if File.exist?(aspec_helper_path)
+      helper_index = args.index("--helper")
+      if helper_index
+        if(helper_index < args.length - 1)
+          load args[helper_index + 1]
+        end
+      end
 
       @lines = bits[1..-1].map(&:to_i)
       is_verbose = args.include?("-v")
@@ -38,6 +44,9 @@ module Aspec
         c.verbose   = is_verbose
         c.slow      = args.include?("--slow")
         c.formatter = args.include?("--junit") ? Formatter::JUnit.new(@file) : Formatter::Terminal.new(is_verbose)
+        if(args.index("--auth") < args.length - 1)
+          c.auth_token = args[args.index("--auth") + 1]
+        end
       end
       TestRunner.new(Aspec.configuration, aspec_files).run(@lines)
     end
