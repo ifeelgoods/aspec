@@ -63,7 +63,8 @@ module Aspec
             else
               validate_method(step[:method])
               header "AUTHORIZATION", "Bearer #{config.auth_token}"
-              send(step[:method].downcase, step[:url])
+              header "Content-Type", "application/json"
+              send(step[:method].downcase, step[:url],step[:request_body])
             end
           rescue Object => e
             formatter.exception("  " + e.class.to_s + ": " + e.message)
@@ -86,6 +87,8 @@ module Aspec
                   response_object = JSON.parse(last_response.body)
                   if expected_object != response_object
                     formatter.exception(" * Expected response #{JSON.pretty_generate(expected_object)} got #{JSON.pretty_generate(response_object)}")
+                    File.open("aspec_expected.txt", 'w') {|f| f.write(JSON.pretty_generate(expected_object)) }
+                    File.open("aspec_response.txt", 'w') {|f| f.write(JSON.pretty_generate(response_object)) }
                     failed = true
                   end
                 rescue JSON::ParserError
