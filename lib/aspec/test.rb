@@ -87,8 +87,10 @@ module Aspec
                   response_object = JSON.parse(last_response.body)
                   if expected_object != response_object
                     formatter.exception(" * Expected response #{JSON.pretty_generate(expected_object)} got #{JSON.pretty_generate(response_object)}")
-                    File.open("aspec_expected.txt", 'w') {|f| f.write(JSON.pretty_generate(expected_object)) }
-                    File.open("aspec_response.txt", 'w') {|f| f.write(JSON.pretty_generate(response_object)) }
+                    if ARGV.include?("--debug")
+                      File.open("query_#{step[:line_num]}_expected.txt", 'w') {|f| f.write(JSON.pretty_generate(expected_object)) }
+                      File.open("query_#{step[:line_num]}_response.txt", 'w') {|f| f.write(JSON.pretty_generate(response_object)) }
+                    end
                     failed = true
                   end
                 rescue JSON::ParserError
