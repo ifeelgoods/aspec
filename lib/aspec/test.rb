@@ -114,7 +114,7 @@ module Aspec
                   body = last_response.body.to_s
                 end
                 if !(body =~ pattern)
-                  formatter.exception(" * Expected response pattern #{step[:exp_response].inspect} didn't match #{last_response.body.inspect}")
+                  formatter.exception(" * Expected response pattern #{step[:exp_response].inspect} \n\n didn't match \n\n #{last_response.body.inspect}")
                   failed = true
                 end
               elsif !step[:resp_is_regex] & (last_response.body.to_s != step[:exp_response])
