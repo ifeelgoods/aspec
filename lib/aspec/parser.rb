@@ -26,20 +26,22 @@ module Aspec
       if line =~ /^\s*(#.*)$/
         {:comment => $1, :line_num => line_num}
       else
-        bits = line.split(" ")
+        bits = line.split("|")
         method = bits[0]
         url    = bits[1]
         url    = URI.encode(url)
 
-        exp_status = bits[2]
+        request_body = bits[2]
+
+        exp_status = bits[3]
         exp_status = exp_status.strip if exp_status
-        exp_content_type = bits[3]
+        exp_content_type = bits[4]
         exp_content_type = exp_content_type.strip if exp_content_type
-        exp_response = (bits[4..-1]||[]).join(" ")
+        exp_response = (bits[5..-1]||[]).join(" ")
         is_regex = exp_response[0] == '/' and exp_response[-1] == '/' and exp_response.size > 2
         exp_response = exp_response[1 .. -2] if is_regex
 
-        {:method => method, :url => url,
+        {:method => method, :url => url, :request_body => request_body,
           :exp_status => exp_status, :exp_content_type => exp_content_type, :exp_response => exp_response,
           :resp_is_regex => is_regex, :line_num => line_num
         }
